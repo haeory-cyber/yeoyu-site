@@ -162,6 +162,9 @@
       align-items: flex-start;
       padding-top: clamp(100px, 14vw, 160px);
       padding-bottom: 40px;
+      position: relative;
+      z-index: 2;
+      max-width: min(580px, 50%);
     }
     .hero__label {
       font-size: 12px;
@@ -173,12 +176,13 @@
     }
     .hero__title {
       font-family: var(--font-display);
-      font-size: clamp(42px, 7vw, 88px);
+      font-size: clamp(38px, 4.8vw, 64px);
       font-weight: 400;
-      line-height: 1.08;
+      line-height: 1.12;
       letter-spacing: -0.02em;
       color: var(--ink);
-      margin-bottom: 12px;
+      margin-bottom: 16px;
+      word-break: keep-all;
     }
     .hero__title em {
       font-style: italic;
@@ -223,8 +227,8 @@
     /* Hero image placeholder */
     .hero__image-wrap {
       position: absolute;
-      right: clamp(-20px, -2vw, 0px); top: 0; bottom: 0;
-      width: clamp(320px, 45%, 600px);
+      right: 0; top: 0; bottom: 0;
+      width: clamp(320px, 42%, 560px);
       overflow: hidden;
     }
     .hero__image {
@@ -615,6 +619,7 @@
     /* ===== RESPONSIVE ===== */
     @media (max-width: 1024px) {
       .hero__image-wrap { display: none; }
+      .hero__content { max-width: 100%; }
       .about__grid,
       .pricing__layout,
       .reserve__layout,
@@ -666,7 +671,7 @@
       <div class="container hero__content">
         <p class="hero__label reveal">충남 논산 가야곡 · 프라이빗 별장 펜션</p>
         <h1 class="hero__title reveal reveal-delay-1">
-          일상을<br>잠시 <em>내려두는</em><br>곳
+          일상을 잠시<br><em>내려두는</em> 곳
         </h1>
         <p class="hero__subtitle reveal reveal-delay-2">
           화이트 미니멀 인테리어, 자쿠지, 바베큐 마당.<br>
