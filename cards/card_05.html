@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080">
+  <title>여유로와 — 침실/욕실</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .room-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 56px;
+    }
+    .room-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .room-item {
+      padding: 28px 0;
+      border-bottom: 1px solid #EFEFEF;
+    }
+    .room-item:last-child {
+      border-bottom: none;
+    }
+    .room-icon-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .room-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #8FB8AD;
+      flex-shrink: 0;
+    }
+    .room-name {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 22px;
+      color: #1A1A1A;
+      font-weight: 600;
+    }
+    .room-desc {
+      font-size: 17px;
+      color: #666;
+      font-weight: 300;
+      line-height: 1.7;
+      padding-left: 18px;
+    }
+    .col-divider {
+      width: 1px;
+      background: #EFEFEF;
+      position: absolute;
+      left: 50%;
+      top: 96px;
+      bottom: 72px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="card-body" style="position:relative;">
+      <div class="section-label">05 — BEDROOM &amp; BATHROOM</div>
+      <div class="card-title">침실 &amp; 욕실</div>
+      <div class="divider"></div>
+
+      <div class="room-grid">
+        <div class="room-col">
+          <div class="item-label" style="margin-bottom:16px;">침실</div>
+
+          <div class="room-item">
+            <div class="room-icon-label">
+              <div class="room-dot"></div>
+              <div class="room-name">1층 방</div>
+            </div>
+            <div class="room-desc">더블베드</div>
+          </div>
+
+          <div class="room-item">
+            <div class="room-icon-label">
+              <div class="room-dot"></div>
+              <div class="room-name">복층 다락방</div>
+            </div>
+            <div class="room-desc">아늑한 다락 구조</div>
+          </div>
+
+          <div class="room-item">
+            <div class="room-icon-label">
+              <div class="room-dot"></div>
+              <div class="room-name">드라이어</div>
+            </div>
+            <div class="room-desc">화장대 서랍에 비치</div>
+          </div>
+        </div>
+
+        <div class="room-col">
+          <div class="item-label" style="margin-bottom:16px;">욕실 용품</div>
+
+          <div class="room-item">
+            <div class="room-icon-label">
+              <div class="room-dot"></div>
+              <div class="room-name">샴푸</div>
+            </div>
+          </div>
+
+          <div class="room-item">
+            <div class="room-icon-label">
+              <div class="room-dot"></div>
+              <div class="room-name">컨디셔너</div>
+            </div>
+          </div>
+
+          <div class="room-item">
+            <div class="room-icon-label">
+              <div class="room-dot"></div>
+              <div class="room-name">바디워시</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <span class="footer-brand">여유로와</span>
+      <span class="footer-page">05 / 07</span>
+    </div>
+  </div>
+</body>
+</html>

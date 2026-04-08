@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080">
+  <title>여유로와 — 표지</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .cover-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 80% 20%, #E8F2EF 0%, transparent 60%),
+        radial-gradient(ellipse 40% 50% at 20% 80%, #F0F7F5 0%, transparent 55%);
+    }
+    .cover-content {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 0;
+    }
+    .cover-eyebrow {
+      font-size: 13px;
+      color: #8FB8AD;
+      letter-spacing: 0.25em;
+      font-weight: 500;
+      margin-bottom: 36px;
+    }
+    .cover-main-title {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 72px;
+      color: #1A1A1A;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 28px;
+    }
+    .cover-accent {
+      width: 40px;
+      height: 3px;
+      background: #8FB8AD;
+      margin: 0 auto 32px;
+      border-radius: 2px;
+    }
+    .cover-addr {
+      font-size: 17px;
+      color: #999;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      line-height: 1.8;
+    }
+    .cover-deco {
+      position: absolute;
+      bottom: 88px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+    }
+    .deco-dots {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .deco-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #D8EDE8;
+    }
+    .deco-dot.active {
+      background: #8FB8AD;
+      width: 20px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="cover-bg"></div>
+
+    <div class="cover-content">
+      <div class="cover-eyebrow">YEOYU — GUESTHOUSE GUIDE</div>
+      <div class="cover-main-title">여유로와<br>사용설명서</div>
+      <div class="cover-accent"></div>
+      <div class="cover-addr">
+        충청남도 논산시 가야곡면<br>강청길 32
+      </div>
+    </div>
+
+    <div class="cover-deco">
+      <div class="deco-dots">
+        <div class="deco-dot active"></div>
+        <div class="deco-dot"></div>
+        <div class="deco-dot"></div>
+        <div class="deco-dot"></div>
+        <div class="deco-dot"></div>
+        <div class="deco-dot"></div>
+        <div class="deco-dot"></div>
+        <div class="deco-dot"></div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <span class="footer-brand">여유로와</span>
+      <span class="footer-page">00 / 07</span>
+    </div>
+  </div>
+</body>
+</html>

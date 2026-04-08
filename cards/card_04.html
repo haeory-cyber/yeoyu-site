@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080">
+  <title>여유로와 — 마당</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .yard-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .yard-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 28px;
+      padding: 36px 0;
+      border-bottom: 1px solid #EFEFEF;
+    }
+    .yard-item:last-child {
+      border-bottom: none;
+    }
+    .yard-num {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 48px;
+      color: #E8F2EF;
+      font-weight: 700;
+      line-height: 1;
+      min-width: 56px;
+      margin-top: -4px;
+    }
+    .yard-content {}
+    .yard-title {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 28px;
+      color: #1A1A1A;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .yard-desc {
+      font-size: 19px;
+      color: #555;
+      font-weight: 300;
+      line-height: 1.75;
+    }
+    .yard-desc strong {
+      font-weight: 500;
+      color: #222;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="card-body">
+      <div class="section-label">04 — YARD</div>
+      <div class="card-title">마당</div>
+      <div class="divider"></div>
+
+      <div class="yard-items">
+        <div class="yard-item">
+          <div class="yard-num">01</div>
+          <div class="yard-content">
+            <div class="yard-title">바베큐 그릴</div>
+            <div class="yard-desc">
+              마당에 바베큐 그릴과 화로대가 준비되어 있습니다.
+            </div>
+          </div>
+        </div>
+
+        <div class="yard-item">
+          <div class="yard-num">02</div>
+          <div class="yard-content">
+            <div class="yard-title">불멍</div>
+            <div class="yard-desc">
+              신발장의 <strong>토치</strong>와 <strong>착화제</strong>를 이용해 주세요.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <span class="footer-brand">여유로와</span>
+      <span class="footer-page">04 / 07</span>
+    </div>
+  </div>
+</body>
+</html>

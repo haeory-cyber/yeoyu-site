@@ -1,0 +1,284 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 1080px;
+  height: 1080px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.card {
+  width: 1080px;
+  height: 1080px;
+  background: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 상단 컬러 라인 */
+.card::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 6px;
+  background: #8FB8AD;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* 하단 푸터 영역 */
+.card-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 72px;
+  border-top: 1px solid #EFEFEF;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 72px;
+}
+
+.footer-brand {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 18px;
+  color: #8FB8AD;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.footer-page {
+  font-size: 15px;
+  color: #BBBBBB;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+}
+
+/* 본문 영역 */
+.card-body {
+  flex: 1;
+  padding: 96px 72px 96px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* 섹션 제목 */
+.section-label {
+  font-size: 14px;
+  color: #8FB8AD;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+/* 카드 대제목 */
+.card-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 52px;
+  color: #1A1A1A;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin-bottom: 20px;
+}
+
+.card-title.large {
+  font-size: 64px;
+}
+
+/* 부제 */
+.card-subtitle {
+  font-size: 20px;
+  color: #888;
+  font-weight: 300;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+/* 구분선 */
+.divider {
+  width: 48px;
+  height: 2px;
+  background: #8FB8AD;
+  margin: 36px 0;
+}
+
+.divider.full {
+  width: 100%;
+  height: 1px;
+  background: #EFEFEF;
+  margin: 28px 0;
+}
+
+/* 항목 블록 */
+.item-block {
+  margin-bottom: 36px;
+}
+
+.item-block:last-child {
+  margin-bottom: 0;
+}
+
+.item-label {
+  font-size: 13px;
+  color: #8FB8AD;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  margin-bottom: 10px;
+}
+
+.item-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 26px;
+  color: #1A1A1A;
+  font-weight: 600;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.item-text {
+  font-size: 19px;
+  color: #444;
+  font-weight: 300;
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+}
+
+.item-text strong {
+  font-weight: 500;
+  color: #222;
+}
+
+/* 두 컬럼 레이아웃 */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 60px;
+}
+
+/* 하이라이트 박스 */
+.highlight-box {
+  background: #F7FAF9;
+  border-left: 3px solid #8FB8AD;
+  padding: 24px 28px;
+  border-radius: 0 8px 8px 0;
+  margin-top: 14px;
+}
+
+.highlight-box .item-text {
+  font-size: 18px;
+}
+
+/* WIFI 박스 */
+.wifi-box {
+  background: #F7FAF9;
+  border: 1px solid #D8EDE8;
+  border-radius: 12px;
+  padding: 28px 36px;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wifi-label {
+  font-size: 12px;
+  color: #8FB8AD;
+  letter-spacing: 0.15em;
+  font-weight: 500;
+}
+
+.wifi-value {
+  font-family: 'Noto Sans KR', monospace;
+  font-size: 20px;
+  color: #1A1A1A;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+}
+
+/* 상점 리스트 */
+.store-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.store-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.store-icon {
+  width: 44px;
+  height: 44px;
+  background: #F7FAF9;
+  border: 1px solid #D8EDE8;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 18px;
+  margin-top: 2px;
+}
+
+.store-name {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 22px;
+  color: #1A1A1A;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.store-addr {
+  font-size: 16px;
+  color: #888;
+  font-weight: 300;
+}
+
+/* 표지 전용 */
+.cover-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 72px;
+}
+
+.cover-icon {
+  width: 80px;
+  height: 80px;
+  background: #F7FAF9;
+  border-radius: 50%;
+  margin: 0 auto 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cover-icon svg {
+  width: 40px;
+  height: 40px;
+}
+
+/* 인라인 아이콘 텍스트 */
+.inline-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
