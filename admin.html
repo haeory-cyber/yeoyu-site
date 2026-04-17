@@ -30,11 +30,8 @@
     padding: 20px 24px;
     background: #fff;
     border-bottom: 1px solid var(--warm-200);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 12px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
   }
   header h1 { font-size: 18px; margin: 0; font-weight: 600; }
   header .meta { font-size: 13px; color: var(--muted); }
@@ -76,7 +73,11 @@
     background: #fff; border-radius: 12px; padding: 20px;
     margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.03);
   }
-  .slot-section h3 { margin: 0 0 4px; font-size: 16px; }
+  .slot-section.uncategorized {
+    background: #fffbe6; border: 1px dashed #e0c674;
+  }
+  .slot-section h3 { margin: 0 0 4px; font-size: 16px; display: flex; justify-content: space-between; align-items: center; }
+  .slot-section h3 .count { font-size: 12px; color: var(--muted); font-weight: 400; }
   .slot-section .hint { font-size: 12px; color: var(--muted); margin: 0 0 16px; }
   .drop-zone {
     border: 2px dashed var(--warm-200); border-radius: 10px;
@@ -111,13 +112,15 @@
   .thumb .actions {
     display: flex; gap: 4px; padding: 0 10px 8px; flex-wrap: wrap;
   }
-  .thumb .actions button {
-    flex: 1; font-size: 11px; padding: 4px 6px; background: var(--warm-100);
+  .thumb .actions button, .thumb .actions select {
+    font-size: 11px; padding: 4px 6px; background: var(--warm-100);
     border: none; border-radius: 4px; cursor: pointer; color: var(--ink);
     min-width: 0;
   }
+  .thumb .actions button { flex: 1; }
+  .thumb .actions select { flex: 2; }
   .thumb .actions button.del { background: #fdecea; color: var(--red); }
-  .thumb .actions button:hover { filter: brightness(0.95); }
+  .thumb .actions button:hover, .thumb .actions select:hover { filter: brightness(0.95); }
   .thumb .badge {
     position: absolute; top: 6px; left: 6px;
     background: rgba(0,0,0,.6); color: #fff; font-size: 10px;
@@ -138,7 +141,6 @@
   .loading {
     text-align: center; padding: 40px; color: var(--muted); font-size: 13px;
   }
-
   .hidden { display: none !important; }
 
   @media (max-width: 600px) {
@@ -159,7 +161,7 @@
 
 <main>
 
-<!-- 로그인 화면 -->
+<!-- 로그인 -->
 <section id="login-view" class="login-wrap">
   <h2>관리자 로그인</h2>
   <p>여유로와 홈페이지 사진을 편집하려면 로그인이 필요합니다.</p>
@@ -176,52 +178,9 @@
   </form>
 </section>
 
-<!-- 관리자 화면 -->
+<!-- 관리자 -->
 <section id="admin-view" class="hidden">
-
-  <div class="slot-section" data-slot="hero">
-    <h3>① 메인(히어로) 사진 <span style="font-size:11px;color:var(--muted);">· 1장</span></h3>
-    <p class="hint">첫 화면 상단에 보이는 큰 사진입니다. 새 사진을 올리면 기존 사진을 교체합니다.</p>
-    <div class="drop-zone" data-slot="hero">
-      <p>사진을 끌어다 놓거나 클릭해서 선택</p>
-      <input type="file" accept="image/*" data-slot="hero">
-    </div>
-    <div class="thumbs single" data-thumbs="hero"></div>
-  </div>
-
-  <div class="slot-section" data-slot="living">
-    <h3>② 거실 사진 <span style="font-size:11px;color:var(--muted);">· 1장</span></h3>
-    <p class="hint">'공간 소개' 섹션의 큰 사진입니다.</p>
-    <div class="drop-zone" data-slot="living">
-      <p>사진을 끌어다 놓거나 클릭해서 선택</p>
-      <input type="file" accept="image/*" data-slot="living">
-    </div>
-    <div class="thumbs single" data-thumbs="living"></div>
-  </div>
-
-  <div class="slot-section" data-slot="loft">
-    <h3>③ 다락방 사진 <span style="font-size:11px;color:var(--muted);">· 1장</span></h3>
-    <p class="hint">'공간 소개' 섹션의 작은 오버레이 사진입니다.</p>
-    <div class="drop-zone" data-slot="loft">
-      <p>사진을 끌어다 놓거나 클릭해서 선택</p>
-      <input type="file" accept="image/*" data-slot="loft">
-    </div>
-    <div class="thumbs single" data-thumbs="loft"></div>
-  </div>
-
-  <div class="slot-section" data-slot="gallery">
-    <h3>④ 갤러리 <span style="font-size:11px;color:var(--muted);">· 여러 장 가능</span></h3>
-    <p class="hint">
-      '공간 둘러보기' 섹션에 표시됩니다. 여러 장을 한 번에 올릴 수 있고,
-      올린 순서대로 표시됩니다. 썸네일에서 순서 이동과 삭제가 가능합니다.
-    </p>
-    <div class="drop-zone" data-slot="gallery">
-      <p>사진을 끌어다 놓거나 클릭해서 선택 (여러 장 가능)</p>
-      <input type="file" accept="image/*" multiple data-slot="gallery">
-    </div>
-    <div class="thumbs" data-thumbs="gallery"></div>
-  </div>
-
+  <div id="sections"></div>
 </section>
 
 </main>
@@ -234,6 +193,20 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const SUPABASE_URL = 'https://tnivhcpjrhkmekcfqgdn.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_SKtfO63ApOP3DyJKu_2ypw_JK4dsdUG';
 const BUCKET = 'yeoyu-gallery';
+
+// 카테고리 정의 (순서 = UI 노출 순서)
+const SLOTS = [
+  { key: 'hero',          label: '메인(히어로)',    hint: '홈 첫 화면 상단의 대표 사진 1장',         single: true  },
+  { key: 'exterior',      label: '전경',           hint: '외관, 마당, 바베큐 공간 등',            single: false },
+  { key: 'kitchen',       label: '주방',           hint: '주방 공간',                         single: false },
+  { key: 'living',        label: '거실',           hint: '거실 (about 섹션 메인 사진으로도 사용)', single: false },
+  { key: 'bedroom',       label: '침실',           hint: '1층 침실',                          single: false },
+  { key: 'bathroom',      label: '욕실',           hint: '욕실',                             single: false },
+  { key: 'jacuzzi',       label: '자쿠지',         hint: '자쿠지/스파',                       single: false },
+  { key: 'loft',          label: '다락방',         hint: '복층 다락방 (about 섹션 오버레이로도 사용)', single: false },
+  { key: 'uncategorized', label: '미분류',         hint: '홈 화면에는 표시되지 않습니다. 아래 드롭다운으로 올바른 카테고리로 이동하세요.', single: false },
+];
+const SLOT_LABEL = Object.fromEntries(SLOTS.map(s => [s.key, s.label]));
 
 const supa = createClient(SUPABASE_URL, SUPABASE_ANON, {
   auth: { persistSession: true, autoRefreshToken: true }
@@ -257,6 +230,31 @@ function publicUrl(path) {
   return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path}?v=${Date.now()}`;
 }
 
+// --- 섹션 DOM 생성 ---
+function buildSections() {
+  const host = $('#sections');
+  host.innerHTML = '';
+  SLOTS.forEach((s, i) => {
+    const sec = document.createElement('div');
+    sec.className = 'slot-section' + (s.key === 'uncategorized' ? ' uncategorized' : '');
+    sec.dataset.slot = s.key;
+    sec.innerHTML = `
+      <h3>
+        <span>${i+1}. ${s.label} ${s.single ? '<span style="font-size:11px;color:var(--muted);">· 1장</span>' : '<span style="font-size:11px;color:var(--muted);">· 여러 장 가능</span>'}</span>
+        <span class="count" data-count="${s.key}"></span>
+      </h3>
+      <p class="hint">${s.hint}</p>
+      <div class="drop-zone" data-slot="${s.key}">
+        <p>사진을 끌어다 놓거나 클릭해서 선택${s.single ? '' : ' (여러 장 가능)'}</p>
+        <input type="file" accept="image/*" ${s.single ? '' : 'multiple'} data-slot="${s.key}">
+      </div>
+      <div class="thumbs ${s.single ? 'single' : ''}" data-thumbs="${s.key}"></div>
+    `;
+    host.appendChild(sec);
+  });
+  host.querySelectorAll('.drop-zone').forEach(setupDropZone);
+}
+
 async function refreshSession() {
   const { data: { session } } = await supa.auth.getSession();
   if (session?.user) {
@@ -264,6 +262,7 @@ async function refreshSession() {
     adminView.classList.remove('hidden');
     logoutBtn.classList.remove('hidden');
     userMeta.textContent = session.user.email;
+    buildSections();
     await loadAll();
   } else {
     loginView.classList.remove('hidden');
@@ -277,7 +276,6 @@ async function refreshSession() {
 $('#login-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   let email = $('#login-email').value.trim();
-  // 아이디만 입력 시 @poomasi.org 자동 부착
   if (email && !email.includes('@')) email = `${email}@poomasi.org`;
   const password = $('#login-password').value;
   const btn = e.target.querySelector('button[type=submit]');
@@ -286,40 +284,31 @@ $('#login-form').addEventListener('submit', async (e) => {
   btn.disabled = true;
   btn.textContent = '로그인 중…';
   try {
-    // 만료·잔여 세션 정리
-    await supa.auth.signOut().catch(()=>{});
     const { data, error } = await supa.auth.signInWithPassword({ email, password });
-    if (error) {
-      errEl.textContent = `로그인 실패: ${error.message}`;
-      showToast(error.message, true);
-    } else if (!data?.session) {
-      errEl.textContent = '세션이 생성되지 않았습니다. 다시 시도해주세요.';
-    } else {
+    if (error) { errEl.textContent = `로그인 실패: ${error.message}`; showToast(error.message, true); }
+    else if (!data?.session) { errEl.textContent = '세션이 생성되지 않았습니다.'; }
+    else {
       showToast('로그인 성공');
-      // 깨끗한 상태로 재시작
-      setTimeout(() => location.reload(), 400);
+      // 세션이 localStorage에 flush될 시간을 100ms만 주고 뷰 전환
+      await new Promise(r => setTimeout(r, 100));
+      await refreshSession();
       return;
     }
   } catch (ex) {
-    errEl.textContent = `예상치 못한 오류: ${ex.message || ex}`;
+    errEl.textContent = `오류: ${ex.message || ex}`;
   } finally {
-    btn.disabled = false;
-    btn.textContent = '로그인';
+    btn.disabled = false; btn.textContent = '로그인';
   }
 });
 
 $('#reset-link').addEventListener('click', async (e) => {
   e.preventDefault();
-  const email = $('#login-email').value.trim();
-  if (!email) {
-    $('#login-err').textContent = '이메일을 먼저 입력하세요.';
-    return;
-  }
-  const { error } = await supa.auth.resetPasswordForEmail(email, {
-    redirectTo: window.location.origin + '/admin.html'
-  });
+  let email = $('#login-email').value.trim();
+  if (email && !email.includes('@')) email = `${email}@poomasi.org`;
+  if (!email) { $('#login-err').textContent = '아이디/이메일을 먼저 입력하세요.'; return; }
+  const { error } = await supa.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/admin' });
   if (error) $('#login-err').textContent = error.message;
-  else showToast('재설정 메일을 보냈습니다. 받은편지함을 확인하세요.');
+  else showToast('재설정 메일을 보냈습니다.');
 });
 
 logoutBtn.addEventListener('click', async () => {
@@ -329,13 +318,13 @@ logoutBtn.addEventListener('click', async () => {
 
 // --- 렌더링 ---
 async function loadAll() {
-  for (const slot of ['hero','living','loft','gallery']) {
-    await renderSlot(slot);
-  }
+  for (const s of SLOTS) await renderSlot(s.key);
 }
 
 async function renderSlot(slot) {
   const container = document.querySelector(`[data-thumbs="${slot}"]`);
+  const countEl = document.querySelector(`[data-count="${slot}"]`);
+  if (!container) return;
   container.innerHTML = '<div class="loading">불러오는 중…</div>';
   const { data, error } = await supa
     .from('yeoyu_gallery_images')
@@ -343,68 +332,78 @@ async function renderSlot(slot) {
     .eq('slot', slot)
     .order('order_index', { ascending: true })
     .order('created_at', { ascending: true });
-  if (error) {
-    container.innerHTML = `<div class="loading">오류: ${error.message}</div>`;
-    return;
-  }
-  if (!data.length) {
-    container.innerHTML = '<div class="loading">아직 업로드된 사진이 없습니다.</div>';
-    return;
-  }
+  if (error) { container.innerHTML = `<div class="loading">오류: ${error.message}</div>`; return; }
+  if (countEl) countEl.textContent = data.length ? `${data.length}장` : '';
+  if (!data.length) { container.innerHTML = '<div class="loading">아직 업로드된 사진이 없습니다.</div>'; return; }
   container.innerHTML = '';
-  data.forEach((row, idx) => {
-    container.appendChild(thumbEl(row, idx, data.length, slot));
-  });
+  data.forEach((row, idx) => container.appendChild(thumbEl(row, idx, data.length, slot)));
 }
 
 function thumbEl(row, idx, total, slot) {
   const el = document.createElement('div');
   el.className = 'thumb';
   const url = publicUrl(row.storage_path);
+  const slotDef = SLOTS.find(s => s.key === slot);
+  const isSingle = slotDef?.single;
+
+  const moveOptions = SLOTS
+    .filter(s => s.key !== slot && s.key !== 'hero')  // hero는 이동 대상에서 제외 (단일 슬롯)
+    .map(s => `<option value="${s.key}">→ ${s.label}(으)로 이동</option>`).join('');
+
   el.innerHTML = `
-    <span class="badge">${slot==='gallery' ? idx+1 : '현재'}</span>
-    <img src="${url}" alt="${row.alt || ''}">
+    <span class="badge">${isSingle ? '현재' : idx+1}</span>
+    <img src="${url}" alt="${(row.alt||'').replace(/"/g,'&quot;')}">
     <div class="info">
-      <input class="alt-input" value="${row.alt || ''}" placeholder="사진 설명(대체텍스트)">
+      <input class="alt-input" value="${(row.alt||'').replace(/"/g,'&quot;')}" placeholder="사진 설명(대체텍스트)">
     </div>
     <div class="actions">
-      ${slot==='gallery' ? `
+      ${!isSingle && total > 1 ? `
         <button data-act="up" ${idx===0?'disabled':''}>↑</button>
         <button data-act="down" ${idx===total-1?'disabled':''}>↓</button>
       ` : ''}
+      ${slot !== 'hero' ? `<select data-act="move"><option value="">카테고리…</option>${moveOptions}</select>` : ''}
       <button data-act="del" class="del">삭제</button>
     </div>
   `;
+
   const altInput = el.querySelector('.alt-input');
   altInput.addEventListener('change', async () => {
-    await supa.from('yeoyu_gallery_images')
-      .update({ alt: altInput.value, updated_at: new Date().toISOString() })
-      .eq('id', row.id);
+    await supa.from('yeoyu_gallery_images').update({ alt: altInput.value, updated_at: new Date().toISOString() }).eq('id', row.id);
     showToast('설명을 저장했습니다.');
   });
-  el.querySelectorAll('[data-act]').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const act = btn.dataset.act;
-      if (act === 'del') {
-        if (!confirm('이 사진을 삭제할까요?')) return;
-        await supa.storage.from(BUCKET).remove([row.storage_path]);
-        await supa.from('yeoyu_gallery_images').delete().eq('id', row.id);
-        showToast('삭제 완료');
+
+  el.querySelectorAll('[data-act]').forEach(ctrl => {
+    const act = ctrl.dataset.act;
+    if (act === 'move') {
+      ctrl.addEventListener('change', async () => {
+        const target = ctrl.value;
+        if (!target) return;
+        const newOrder = await nextOrderIndex(target);
+        await supa.from('yeoyu_gallery_images').update({ slot: target, order_index: newOrder }).eq('id', row.id);
+        showToast(`${SLOT_LABEL[target]}(으)로 이동했습니다.`);
         await renderSlot(slot);
-      } else if (act === 'up' || act === 'down') {
-        await moveGallery(row, act);
-        await renderSlot(slot);
-      }
-    });
+        await renderSlot(target);
+      });
+    } else {
+      ctrl.addEventListener('click', async () => {
+        if (act === 'del') {
+          if (!confirm('이 사진을 삭제할까요?')) return;
+          await supa.storage.from(BUCKET).remove([row.storage_path]);
+          await supa.from('yeoyu_gallery_images').delete().eq('id', row.id);
+          showToast('삭제 완료'); await renderSlot(slot);
+        } else if (act === 'up' || act === 'down') {
+          await moveOrder(row, slot, act);
+          await renderSlot(slot);
+        }
+      });
+    }
   });
   return el;
 }
 
-async function moveGallery(row, dir) {
-  // 현재 갤러리 전체 불러와서 순서 재정렬
+async function moveOrder(row, slot, dir) {
   const { data } = await supa.from('yeoyu_gallery_images')
-    .select('id, order_index')
-    .eq('slot', 'gallery')
+    .select('id, order_index').eq('slot', slot)
     .order('order_index', { ascending: true });
   const idx = data.findIndex(r => r.id === row.id);
   const target = dir === 'up' ? idx - 1 : idx + 1;
@@ -414,13 +413,18 @@ async function moveGallery(row, dir) {
   await supa.from('yeoyu_gallery_images').update({ order_index: a.order_index }).eq('id', b.id);
 }
 
+async function nextOrderIndex(slot) {
+  const { data } = await supa.from('yeoyu_gallery_images')
+    .select('order_index').eq('slot', slot)
+    .order('order_index', { ascending: false }).limit(1);
+  return (data?.[0]?.order_index ?? 0) + 1;
+}
+
 // --- 업로드 ---
 function setupDropZone(zone) {
   const slot = zone.dataset.slot;
   const input = zone.querySelector('input[type=file]');
-  zone.addEventListener('click', (e) => {
-    if (e.target.tagName !== 'INPUT') input.click();
-  });
+  zone.addEventListener('click', (e) => { if (e.target.tagName !== 'INPUT') input.click(); });
   ['dragenter','dragover'].forEach(evt =>
     zone.addEventListener(evt, (e) => { e.preventDefault(); zone.classList.add('hover'); }));
   ['dragleave','drop'].forEach(evt =>
@@ -441,8 +445,8 @@ async function handleFiles(slot, files) {
   if (!imgs.length) { showToast('이미지 파일만 올릴 수 있습니다.', true); return; }
   showToast(`${imgs.length}장 업로드 중…`);
 
-  // 단일 슬롯이면 기존 것 삭제
-  if (slot !== 'gallery') {
+  const slotDef = SLOTS.find(s => s.key === slot);
+  if (slotDef?.single) {
     const { data: existing } = await supa.from('yeoyu_gallery_images')
       .select('id, storage_path').eq('slot', slot);
     if (existing?.length) {
@@ -451,35 +455,24 @@ async function handleFiles(slot, files) {
     }
   }
 
-  // 다음 order_index 계산
-  let nextOrder = 0;
-  if (slot === 'gallery') {
-    const { data: max } = await supa.from('yeoyu_gallery_images')
-      .select('order_index').eq('slot','gallery')
-      .order('order_index',{ascending:false}).limit(1);
-    nextOrder = (max?.[0]?.order_index ?? 0) + 1;
-  }
+  let nextOrder = slotDef?.single ? 0 : await nextOrderIndex(slot);
 
   for (const file of imgs) {
     const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
     const ts = Date.now() + Math.floor(Math.random()*1000);
     const path = `${slot}/${ts}.${ext}`;
     const { error: upErr } = await supa.storage.from(BUCKET).upload(path, file, {
-      cacheControl: '3600',
-      upsert: false,
-      contentType: file.type
+      cacheControl: '3600', upsert: false, contentType: file.type
     });
     if (upErr) { showToast(`업로드 실패: ${upErr.message}`, true); continue; }
     const { error: dbErr } = await supa.from('yeoyu_gallery_images').insert({
-      slot, storage_path: path, alt: '', order_index: slot==='gallery' ? nextOrder++ : 0
+      slot, storage_path: path, alt: '', order_index: slotDef?.single ? 0 : nextOrder++
     });
     if (dbErr) { showToast(`DB 저장 실패: ${dbErr.message}`, true); continue; }
   }
   showToast('업로드 완료');
   await renderSlot(slot);
 }
-
-document.querySelectorAll('.drop-zone').forEach(setupDropZone);
 
 // 시작
 refreshSession();

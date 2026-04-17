@@ -374,6 +374,44 @@
     }
     .gallery__item:hover .gallery__caption { opacity: 1; }
 
+    /* 탭 방식 갤러리 */
+    .gallery__tabs {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin-bottom: 24px;
+    }
+    .gallery__tab {
+      padding: 8px 18px; border: 1px solid var(--sage-200);
+      background: transparent; color: var(--ink-60); border-radius: 22px;
+      font-size: 13px; cursor: pointer; transition: all 0.2s;
+      font-family: inherit;
+    }
+    .gallery__tab:hover:not(:disabled) { border-color: var(--sage-400); color: var(--ink); }
+    .gallery__tab.active {
+      background: var(--sage-600); border-color: var(--sage-600); color: #fff;
+    }
+    .gallery__tab:disabled { opacity: 0.35; cursor: default; }
+    .gallery__grid--tabs {
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      grid-template-rows: auto;
+    }
+    .gallery__grid--tabs .gallery__item {
+      grid-column: span 1 !important;
+      grid-row: span 1 !important;
+      height: 240px;
+      background: var(--sage-100);
+    }
+    .gallery__grid--tabs .gallery__item:nth-child(n) { background: var(--sage-100); }
+    .gallery__grid--tabs .gallery__caption {
+      opacity: 1;
+      background: linear-gradient(transparent 40%, rgba(26,26,22,0.55));
+    }
+    .gallery__empty {
+      grid-column: 1 / -1;
+      text-align: center; padding: 40px 20px;
+      color: var(--ink-60); font-size: 14px;
+      background: #fff; border: 1px dashed var(--sage-200); border-radius: var(--radius-md);
+    }
+
     /* ===== PRICING ===== */
     .pricing {
       padding: var(--section-gap) 0;
@@ -794,28 +832,10 @@
             <a href="/admin.html" style="color:inherit;">관리 페이지</a>에서 사진을 올리면 바로 반영됩니다.
           </p>
         </div>
-        <div class="gallery__grid" role="list">
-          <div class="gallery__item reveal" role="listitem">
-            <img src="images/gallery-01.jpg" alt="여유로와 외관 전경" width="600" height="520" loading="lazy">
-            <div class="gallery__caption">외관</div>
-          </div>
-          <div class="gallery__item reveal reveal-delay-1" role="listitem">
-            <img src="images/gallery-02.jpg" alt="화이트 미니멀 거실" width="400" height="260" loading="lazy">
-            <div class="gallery__caption">거실</div>
-          </div>
-          <div class="gallery__item reveal reveal-delay-2" role="listitem">
-            <img src="images/gallery-03.jpg" alt="1층 침실" width="300" height="260" loading="lazy">
-            <div class="gallery__caption">침실</div>
-          </div>
-          <div class="gallery__item reveal reveal-delay-1" role="listitem">
-            <img src="images/gallery-04.jpg" alt="복층 다락방" width="300" height="260" loading="lazy">
-            <div class="gallery__caption">다락방</div>
-          </div>
-          <div class="gallery__item reveal reveal-delay-2" role="listitem">
-            <img src="images/gallery-05.jpg" alt="마당 바베큐 공간과 정자" width="400" height="260" loading="lazy">
-            <div class="gallery__caption">마당</div>
-          </div>
-        </div>
+        <!-- 탭 버튼 (JS가 동적 생성) -->
+        <div class="gallery__tabs" role="tablist"></div>
+        <!-- 사진 그리드 (JS가 탭에 따라 채움) -->
+        <div class="gallery__grid gallery__grid--tabs" role="list"></div>
       </div>
     </section>
 
@@ -1223,24 +1243,61 @@
       replaceOne('living', '.about__img-main');
       replaceOne('loft',   '.about__img-accent');
 
-      const gallery = bySlot.gallery;
+      // 카테고리별 갤러리 탭
+      const CATS = [
+        { key: 'exterior', label: '전경' },
+        { key: 'kitchen',  label: '주방' },
+        { key: 'living',   label: '거실' },
+        { key: 'bedroom',  label: '침실' },
+        { key: 'bathroom', label: '욕실' },
+        { key: 'jacuzzi',  label: '자쿠지' },
+        { key: 'loft',     label: '다락방' },
+      ];
+      const tabsEl = document.querySelector('.gallery__tabs');
       const grid = document.querySelector('.gallery__grid');
-      if (grid && gallery?.length) {
-        grid.innerHTML = '';
-        gallery.forEach((r, i) => {
-          const delay = i % 3 === 1 ? ' reveal-delay-1' : i % 3 === 2 ? ' reveal-delay-2' : '';
-          const item = document.createElement('div');
-          item.className = 'gallery__item reveal' + delay;
-          item.setAttribute('role', 'listitem');
-          const safeAlt = (r.alt || '').replace(/"/g, '&quot;');
-          item.innerHTML = `
-            <img src="${pub(r.storage_path)}" alt="${safeAlt}" loading="lazy">
-            ${r.alt ? `<div class="gallery__caption">${r.alt.replace(/</g,'&lt;')}</div>` : ''}
-          `;
-          grid.appendChild(item);
+      const escapeHtml = (s) => (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+      if (tabsEl && grid) {
+        tabsEl.innerHTML = '';
+        // 첫 번째로 사진이 있는 카테고리를 기본 선택
+        const firstWithPhotos = CATS.find(c => (bySlot[c.key] || []).length > 0) || CATS[0];
+
+        CATS.forEach(cat => {
+          const btn = document.createElement('button');
+          btn.className = 'gallery__tab';
+          btn.type = 'button';
+          btn.dataset.cat = cat.key;
+          btn.setAttribute('role', 'tab');
+          const count = (bySlot[cat.key] || []).length;
+          btn.textContent = count > 0 ? `${cat.label} (${count})` : cat.label;
+          if (count === 0) btn.disabled = true;
+          if (cat.key === firstWithPhotos.key) btn.classList.add('active');
+          btn.addEventListener('click', () => {
+            tabsEl.querySelectorAll('.gallery__tab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderCat(cat.key);
+          });
+          tabsEl.appendChild(btn);
         });
-        // 기존 IntersectionObserver는 이미 초기화된 상태 → 새 요소는 직접 visible 처리
-        grid.querySelectorAll('.gallery__item.reveal').forEach(el => el.classList.add('visible'));
+
+        function renderCat(key) {
+          const rows = bySlot[key] || [];
+          grid.innerHTML = '';
+          if (!rows.length) {
+            grid.innerHTML = `<div class="gallery__empty">사진이 아직 준비 중입니다.</div>`;
+            return;
+          }
+          rows.forEach(r => {
+            const item = document.createElement('div');
+            item.className = 'gallery__item';
+            item.setAttribute('role', 'listitem');
+            item.innerHTML = `
+              <img src="${pub(r.storage_path)}" alt="${escapeHtml(r.alt)}" loading="lazy">
+              ${r.alt ? `<div class="gallery__caption">${escapeHtml(r.alt)}</div>` : ''}
+            `;
+            grid.appendChild(item);
+          });
+        }
+        renderCat(firstWithPhotos.key);
       }
     } catch (e) {
       console.warn('[yeoyu] dynamic images skipped:', e);
