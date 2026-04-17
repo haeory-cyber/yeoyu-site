@@ -208,8 +208,14 @@ const SLOTS = [
 ];
 const SLOT_LABEL = Object.fromEntries(SLOTS.map(s => [s.key, s.label]));
 
+// Navigator Lock 비활성화 — 일부 Chrome 환경에서 hang되는 이슈 회피
 const supa = createClient(SUPABASE_URL, SUPABASE_ANON, {
-  auth: { persistSession: true, autoRefreshToken: true }
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    storage: window.localStorage,
+    lock: async (name, acquireTimeout, fn) => await fn(),
+  }
 });
 
 const $ = (sel) => document.querySelector(sel);
@@ -284,15 +290,28 @@ $('#login-form').addEventListener('submit', async (e) => {
   btn.disabled = true;
   btn.textContent = '로그인 중…';
   try {
-    const { data, error } = await supa.auth.signInWithPassword({ email, password });
-    if (error) { errEl.textContent = `로그인 실패: ${error.message}`; showToast(error.message, true); }
-    else if (!data?.session) { errEl.textContent = '세션이 생성되지 않았습니다.'; }
-    else {
-      showToast('로그인 성공');
-      // 세션이 localStorage에 flush될 시간을 100ms만 주고 뷰 전환
-      await new Promise(r => setTimeout(r, 100));
-      await refreshSession();
-      return;
+    // fetch로 직접 토큰 획득 (Supabase 내부 lock 우회)
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON },
+      body: JSON.stringify({ email, password })
+    });
+    const body = await res.json();
+    if (!res.ok) {
+      errEl.textContent = body.msg || body.error_description || body.error || '로그인 실패';
+    } else {
+      // Supabase client에 세션 주입 (lock은 이미 no-op)
+      const { error: setErr } = await supa.auth.setSession({
+        access_token: body.access_token,
+        refresh_token: body.refresh_token,
+      });
+      if (setErr) {
+        errEl.textContent = `세션 설정 실패: ${setErr.message}`;
+      } else {
+        showToast('로그인 성공');
+        await refreshSession();
+        return;
+      }
     }
   } catch (ex) {
     errEl.textContent = `오류: ${ex.message || ex}`;
@@ -474,9 +493,8 @@ async function handleFiles(slot, files) {
   await renderSlot(slot);
 }
 
-// 시작
+// 시작 (onAuthStateChange 리스너는 쓰지 않음 — setSession과 재귀 걸려 hang 발생)
 refreshSession();
-supa.auth.onAuthStateChange(() => refreshSession());
 </script>
 
 </body>
