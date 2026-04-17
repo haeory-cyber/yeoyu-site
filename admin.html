@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
 <title>여유로와 — 사진 관리</title>
 <style>
   :root {
@@ -276,12 +278,31 @@ $('#login-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const email = $('#login-email').value.trim();
   const password = $('#login-password').value;
-  $('#login-err').textContent = '';
-  const { error } = await supa.auth.signInWithPassword({ email, password });
-  if (error) {
-    $('#login-err').textContent = error.message;
-  } else {
-    await refreshSession();
+  const btn = e.target.querySelector('button[type=submit]');
+  const errEl = $('#login-err');
+  errEl.textContent = '';
+  btn.disabled = true;
+  btn.textContent = '로그인 중…';
+  try {
+    // 만료·잔여 세션 정리
+    await supa.auth.signOut().catch(()=>{});
+    const { data, error } = await supa.auth.signInWithPassword({ email, password });
+    if (error) {
+      errEl.textContent = `로그인 실패: ${error.message}`;
+      showToast(error.message, true);
+    } else if (!data?.session) {
+      errEl.textContent = '세션이 생성되지 않았습니다. 다시 시도해주세요.';
+    } else {
+      showToast('로그인 성공');
+      // 깨끗한 상태로 재시작
+      setTimeout(() => location.reload(), 400);
+      return;
+    }
+  } catch (ex) {
+    errEl.textContent = `예상치 못한 오류: ${ex.message || ex}`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '로그인';
   }
 });
 
