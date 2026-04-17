@@ -164,8 +164,8 @@
   <h2>관리자 로그인</h2>
   <p>여유로와 홈페이지 사진을 편집하려면 로그인이 필요합니다.</p>
   <form id="login-form">
-    <label>이메일
-      <input type="email" id="login-email" autocomplete="username" required>
+    <label>아이디
+      <input type="text" id="login-email" autocomplete="username" placeholder="yeoyu 또는 이메일" required>
     </label>
     <label>비밀번호
       <input type="password" id="login-password" autocomplete="current-password" required>
@@ -276,7 +276,9 @@ async function refreshSession() {
 // --- 로그인 ---
 $('#login-form').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const email = $('#login-email').value.trim();
+  let email = $('#login-email').value.trim();
+  // 아이디만 입력 시 @poomasi.org 자동 부착
+  if (email && !email.includes('@')) email = `${email}@poomasi.org`;
   const password = $('#login-password').value;
   const btn = e.target.querySelector('button[type=submit]');
   const errEl = $('#login-err');
