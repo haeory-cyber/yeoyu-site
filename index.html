@@ -791,7 +791,7 @@
             <h2 class="section-title reveal reveal-delay-1" id="gallery-title">공간 둘러보기</h2>
           </div>
           <p class="section-desc reveal" style="max-width:280px; font-size:14px;">
-            images/ 폴더에 사진을 넣으면 바로 표시됩니다.
+            <a href="/admin.html" style="color:inherit;">관리 페이지</a>에서 사진을 올리면 바로 반영됩니다.
           </p>
         </div>
         <div class="gallery__grid" role="list">
@@ -1188,6 +1188,64 @@
     const today = new Date().toISOString().slice(0, 10);
     document.getElementById('checkin').min = today;
     document.getElementById('checkout').min = today;
+  </script>
+
+  <!-- ===== Supabase 동적 이미지 로드 =====
+       images/*.jpg 정적 이미지는 기본값/안전망. Supabase에 업로드된 사진이 있으면 그걸로 교체.
+       관리 페이지: /admin.html -->
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+    const SUPABASE_URL = 'https://tnivhcpjrhkmekcfqgdn.supabase.co';
+    const SUPABASE_ANON = 'sb_publishable_SKtfO63ApOP3DyJKu_2ypw_JK4dsdUG';
+    const BUCKET = 'yeoyu-gallery';
+    const pub = (p) => `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${p}`;
+
+    try {
+      const supa = createClient(SUPABASE_URL, SUPABASE_ANON, { auth: { persistSession: false } });
+      const { data, error } = await supa
+        .from('yeoyu_gallery_images')
+        .select('slot, storage_path, alt, order_index, created_at')
+        .order('order_index', { ascending: true })
+        .order('created_at', { ascending: true });
+      if (error || !data) throw error;
+
+      const bySlot = data.reduce((a, r) => ((a[r.slot] = a[r.slot] || []).push(r), a), {});
+
+      const replaceOne = (slot, selector) => {
+        const rows = bySlot[slot];
+        if (!rows?.length) return;
+        const el = document.querySelector(selector);
+        if (!el) return;
+        el.src = pub(rows[0].storage_path);
+        if (rows[0].alt) el.alt = rows[0].alt;
+      };
+      replaceOne('hero',   '.hero__image');
+      replaceOne('living', '.about__img-main');
+      replaceOne('loft',   '.about__img-accent');
+
+      const gallery = bySlot.gallery;
+      const grid = document.querySelector('.gallery__grid');
+      if (grid && gallery?.length) {
+        grid.innerHTML = '';
+        gallery.forEach((r, i) => {
+          const delay = i % 3 === 1 ? ' reveal-delay-1' : i % 3 === 2 ? ' reveal-delay-2' : '';
+          const item = document.createElement('div');
+          item.className = 'gallery__item reveal' + delay;
+          item.setAttribute('role', 'listitem');
+          const safeAlt = (r.alt || '').replace(/"/g, '&quot;');
+          item.innerHTML = `
+            <img src="${pub(r.storage_path)}" alt="${safeAlt}" loading="lazy">
+            ${r.alt ? `<div class="gallery__caption">${r.alt.replace(/</g,'&lt;')}</div>` : ''}
+          `;
+          grid.appendChild(item);
+        });
+        // 기존 IntersectionObserver는 이미 초기화된 상태 → 새 요소는 직접 visible 처리
+        grid.querySelectorAll('.gallery__item.reveal').forEach(el => el.classList.add('visible'));
+      }
+    } catch (e) {
+      console.warn('[yeoyu] dynamic images skipped:', e);
+      // 실패 시 정적 images/*.jpg가 그대로 보임 (안전망)
+    }
   </script>
 </body>
 </html>

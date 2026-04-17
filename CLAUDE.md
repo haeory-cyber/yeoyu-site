@@ -66,17 +66,20 @@ yeoyu-site/
 
 ## 자주 하는 작업
 
-### 1) 메인 사진 바꾸기
-```
-새 사진을 images/hero.jpg로 덮어쓰면 끝.
-파일 이름은 그대로 유지할 것 (index.html은 'images/hero.jpg'를 참조).
-```
+### 1) 사진 바꾸기/추가 (2026-04-17 방식 변경 — 권장)
 
-### 2) 갤러리 사진 추가/교체
-```
-images/gallery-01.jpg ~ gallery-05.jpg 자리에 새 사진 덮어쓰기.
-사진 6장 이상 넣고 싶으면 index.html의 .gallery__grid 영역 수정 필요.
-```
+**관리 페이지**: https://yeoyu.poomasi.org/admin.html
+
+- 로그인: `haeory@gmail.com` + 비밀번호 (첫 사용 시 "비밀번호 재설정 메일 받기" 클릭)
+- 4개 자리: **히어로(메인)·거실·다락·갤러리(여러 장)**
+- 드래그 앤 드롭 또는 클릭해서 선택 → 업로드 즉시 반영(새로고침 필요)
+- 갤러리는 순서 이동(↑↓), 사진 설명(alt text) 편집, 삭제 가능
+- 저장소: Supabase Storage 버킷 `yeoyu-gallery`, 메타는 `public.yeoyu_gallery_images`
+- Supabase 프로젝트: `tnivhcpjrhkmekcfqgdn` (ap-northeast-2)
+
+### 1-구) 레포에 박힌 정적 이미지 (안전망)
+`images/*.jpg`는 Supabase 장애·조회 실패 시 백업 표시용으로 유지.
+일반적으로 건드릴 일 없음. 교체하려면 파일명 맞춰 덮어쓰고 push.
 
 ### 2-1) 사진 용량/크기 가이드 (중요)
 - **권장 용량**: 한 장당 500KB 이하 (최대 1MB)
