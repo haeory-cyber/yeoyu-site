@@ -127,22 +127,21 @@
     .gallery .section-heading { color: #fff; }
     .gallery__header { margin-bottom: 32px; }
     /* 2-panel layout */
-    .gallery__layout { display: grid; grid-template-columns: 3fr 2fr; gap: 28px; align-items: start; }
-    .gallery__main { position: sticky; top: 88px; }
-    .gallery__main-img-wrap { position: relative; border-radius: var(--radius-md); overflow: hidden; background: rgba(255,255,255,0.06); aspect-ratio: 3/2; }
-    .gallery__main-img { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity 0.25s ease; }
-    .gallery__main-caption { margin-top: 10px; font-size: 13px; color: rgba(255,255,255,0.45); min-height: 18px; line-height: 1.5; font-family: var(--font-sans); }
+    .gallery__layout { display: flex; align-items: flex-start; gap: 28px; }
+    .gallery__main { width: 60%; flex-shrink: 0; position: relative; }
+    .gallery__main-img-wrap { width: 100%; height: 0; padding-top: 75%; position: relative; border-radius: var(--radius-md); overflow: hidden; background: rgba(255,255,255,0.06); box-shadow: none; }
+    .gallery__main-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity 0.25s ease; }
+    .gallery__main-caption { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px 16px; background: linear-gradient(transparent, rgba(0,0,0,0.5)); color: rgba(255,255,255,0.8); font-size: 13px; line-height: 1.5; font-family: var(--font-sans); pointer-events: none; }
     /* sidebar */
-    .gallery__tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .gallery__sidebar { width: 40%; flex-shrink: 0; display: flex; flex-direction: column; }
+    .gallery__tabs { flex-shrink: 0; display: flex; flex-wrap: wrap; gap: 6px; }
     .gallery__tab { padding: 6px 14px; border: 1px solid rgba(255,255,255,0.18); background: transparent; color: rgba(255,255,255,0.45); border-radius: 22px; font-size: 12px; cursor: pointer; transition: all 0.2s; font-family: inherit; }
     .gallery__tab:hover:not(:disabled) { border-color: rgba(255,255,255,0.6); color: #fff; }
     .gallery__tab.active { background: #8FB8AD; border-color: #8FB8AD; color: #fff; }
     .gallery__tab:disabled { opacity: 0.25; cursor: default; }
     /* thumbnail grid */
-    .gallery__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; max-height: 440px; overflow-y: auto; }
-    .gallery__grid::-webkit-scrollbar { width: 4px; }
-    .gallery__grid::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.18); border-radius: 2px; }
-    .gallery__item { overflow: hidden; border-radius: 6px; background: rgba(255,255,255,0.06); aspect-ratio: 1; position: relative; cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s, transform 0.15s; }
+    .gallery__grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; gap: 6px; overflow: hidden; margin-top: 16px; }
+    .gallery__item { overflow: hidden; border-radius: 6px; background: rgba(255,255,255,0.06); aspect-ratio: 1/1; position: relative; cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s, transform 0.15s; }
     .gallery__item.selected { border-color: #8FB8AD; }
     .gallery__item:hover { transform: scale(1.03); }
     .gallery__item img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -269,10 +268,11 @@
       .amenities__grid { grid-template-columns: repeat(3, 1fr); }
       .pricing__layout { grid-template-columns: 1fr; }
       .loc-grid { grid-template-columns: 1fr; }
-      .gallery__layout { grid-template-columns: 1fr; }
-      .gallery__main { position: static; }
-      .gallery__main-img-wrap { aspect-ratio: 16/9; }
-      .gallery__grid { max-height: 300px; }
+      .gallery__layout { flex-direction: column; }
+      .gallery__main { width: 100%; }
+      .gallery__main-img-wrap { padding-top: 56.25%; }
+      .gallery__sidebar { width: 100%; }
+      .gallery__grid { height: auto !important; grid-template-rows: auto; }
     }
     @media (max-width: 768px) {
       .offers__grid { grid-template-columns: 1fr; }
@@ -736,47 +736,38 @@
 
       // 탭 갤러리 (2-panel layout)
       const CATS = [
-        { key: 'all',      label: '전체' },
         { key: 'exterior', label: '전경' }, { key: 'kitchen', label: '주방' },
         { key: 'living',   label: '거실' }, { key: 'bedroom',  label: '침실' },
         { key: 'bathroom', label: '욕실' }, { key: 'jacuzzi',  label: '자쿠지' },
         { key: 'loft',     label: '다락방' },
       ];
-      const ALL_KEYS = ['exterior','kitchen','living','bedroom','bathroom','jacuzzi','loft'];
-      const tabsEl   = document.querySelector('.gallery__tabs');
-      const grid     = document.querySelector('.gallery__grid');
-      const mainImg  = document.getElementById('galleryMainImg');
-      const mainCap  = document.getElementById('galleryMainCaption');
-      const esc      = (s) => (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-
-      function getRows(key) {
-        return key === 'all'
-          ? ALL_KEYS.flatMap(k => bySlot[k] || [])
-          : (bySlot[key] || []);
-      }
-
-      function showMain(row) {
-        if (!mainImg || !row) return;
-        mainImg.style.opacity = '0';
-        setTimeout(() => {
-          mainImg.src = pub(row.storage_path);
-          mainImg.alt = row.alt || '';
-          if (mainCap) mainCap.textContent = row.alt || '';
-          mainImg.style.opacity = '1';
-        }, 220);
-      }
+      const tabsEl  = document.querySelector('.gallery__tabs');
+      const grid    = document.querySelector('.gallery__grid');
+      const mainImg = document.getElementById('galleryMainImg');
+      const mainCap = document.getElementById('galleryMainCaption');
+      const esc     = (s) => (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
       if (tabsEl && grid && mainImg) {
-        const firstWithPhotos = CATS.find(c => getRows(c.key).length > 0) || CATS[0];
+        const firstWithPhotos = CATS.find(c => (bySlot[c.key]||[]).length > 0) || CATS[0];
+
+        function showMain(row) {
+          if (!row) return;
+          mainImg.style.opacity = '0';
+          setTimeout(() => {
+            mainImg.src = pub(row.storage_path);
+            mainImg.alt = row.alt || '';
+            if (mainCap) mainCap.textContent = row.alt || '';
+            mainImg.style.opacity = '1';
+          }, 220);
+        }
 
         CATS.forEach(cat => {
-          const rows = getRows(cat.key);
-          if (cat.key !== 'all' && rows.length === 0) return;
+          const count = (bySlot[cat.key]||[]).length;
+          if (count === 0) return;
           const btn = document.createElement('button');
           btn.className = 'gallery__tab'; btn.type = 'button';
           btn.setAttribute('role', 'tab');
-          btn.textContent = rows.length > 0 ? `${cat.label} (${rows.length})` : cat.label;
-          if (cat.key !== 'all' && rows.length === 0) btn.disabled = true;
+          btn.textContent = cat.label;
           if (cat.key === firstWithPhotos.key) btn.classList.add('active');
           btn.addEventListener('click', () => {
             tabsEl.querySelectorAll('.gallery__tab').forEach(b => b.classList.remove('active'));
@@ -787,7 +778,7 @@
         });
 
         function renderCat(key) {
-          const rows = getRows(key);
+          const rows = (bySlot[key] || []).slice(0, 6);
           grid.innerHTML = '';
           if (!rows.length) {
             grid.innerHTML = `<div class="gallery__empty">사진이 아직 준비 중입니다.</div>`;
@@ -809,6 +800,21 @@
           if (firstItem) { firstItem.classList.add('selected'); showMain(rows[0]); }
         }
         renderCat(firstWithPhotos.key);
+
+        function syncGalleryHeight() {
+          const wrap = document.querySelector('.gallery__main-img-wrap');
+          if (!wrap || !tabsEl || !grid) return;
+          const imgH = wrap.getBoundingClientRect().height;
+          const tabsH = tabsEl.getBoundingClientRect().height;
+          const h = Math.round(imgH - tabsH - 16);
+          if (h > 0) grid.style.height = h + 'px';
+        }
+        requestAnimationFrame(() => requestAnimationFrame(syncGalleryHeight));
+        let _rsTimer;
+        window.addEventListener('resize', () => {
+          clearTimeout(_rsTimer);
+          _rsTimer = setTimeout(syncGalleryHeight, 100);
+        });
       }
     } catch(e) { console.warn('[yeoyu] dynamic images skipped:', e); }
   </script>
