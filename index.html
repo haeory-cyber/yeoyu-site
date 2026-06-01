@@ -75,6 +75,9 @@
     .hero__scroll { position: absolute; bottom: 44px; right: clamp(20px,5vw,56px); z-index: 2; writing-mode: vertical-rl; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.38); display: flex; align-items: center; gap: 14px; }
     .hero__scroll::after { content: ''; display: block; width: 1px; height: 52px; background: rgba(255,255,255,0.22); animation: scrollPulse 2.4s ease-in-out infinite; }
     @keyframes scrollPulse { 0%,100%{opacity:.3} 50%{opacity:.8} }
+    .hero__slides { position: absolute; inset: 0; }
+    .hero__slide { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity 1.2s ease-in-out; }
+    .hero__slide.active { opacity: 1; }
 
     /* SPLIT (EXTERIOR) */
     .split { display: grid; grid-template-columns: 57% 43%; min-height: 660px; }
@@ -96,7 +99,7 @@
     .offers { padding: var(--section-gap) 0; background: var(--cream); }
     .offers__header { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: end; margin-bottom: 56px; }
     .offers__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .offer-card { border-radius: var(--radius-md); overflow: hidden; background: var(--warm-50); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .offer-card { border-radius: var(--radius-md); overflow: hidden; background: #ffffff; transition: transform 0.3s ease, box-shadow 0.3s ease; }
     .offer-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
     .offer-card__img { height: 270px; background-size: cover; background-position: center; background-color: var(--warm-100); }
     .offer-card:nth-child(1) .offer-card__img { background-image: url('images/gallery-01.jpg'), linear-gradient(135deg,#2D5016,#4a7a28); }
@@ -171,11 +174,12 @@
     .availability__header .en-label,
     .availability__header .section-heading { display: block; }
     .availability__header .section-body { margin: 0 auto; text-align: center; }
-    .calendar-embed { width: 100%; max-width: 1100px; margin: 0 auto; border: 1px solid var(--ink-10); border-radius: var(--radius-lg); overflow: hidden; background: #fff; box-shadow: var(--shadow-md); box-sizing: border-box; height: 590px; }
-    .calendar-embed iframe { width: 122%; height: 720px; border: 0; display: block; transform: scale(0.82); transform-origin: top left; }
+    .calendar-embed { position: relative; width: 100%; max-width: 1100px; margin: 0 auto; border: 1px solid var(--ink-10); border-radius: var(--radius-lg); overflow: hidden; background: #fff; box-shadow: var(--shadow-md); box-sizing: border-box; height: 700px; }
+    .calendar-overlay { position: absolute; inset: 0; z-index: 1; background: transparent; cursor: pointer; }
+    .calendar-embed iframe { width: 122%; height: 854px; border: 0; display: block; transform: scale(0.82); transform-origin: top left; }
 
     /* INFO TABS */
-    .info { padding: var(--section-gap) 0; background: var(--cream); }
+    .info { padding: var(--section-gap) 0; background: #14350c; }
     .info__tabs { display: flex; border-bottom: 1.5px solid var(--ink-10); margin-bottom: 40px; }
     .info__tab-btn { padding: 14px 28px; font-family: var(--font-sans); font-size: 14px; font-weight: 500; border: none; background: none; cursor: pointer; color: var(--ink-60); border-bottom: 2px solid transparent; margin-bottom: -1.5px; transition: color 0.2s, border-color 0.2s; }
     .info__tab-btn.active { color: var(--forest); border-bottom-color: var(--forest); }
@@ -206,11 +210,33 @@
     .refund-none { color: #c0392b !important; }
 
     /* FOOTER */
-    footer { padding: 48px 0 40px; border-top: 1px solid var(--ink-10); background: var(--cream); }
+    footer { padding: 48px 0 40px; border-top: 1px solid rgba(255,255,255,0.1); background: #14350c; }
     .footer__inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
     .footer__brand img { max-width: 140px; width: 100%; height: auto; display: block; opacity: 0.65; }
     .footer__info { font-size: 13px; color: var(--ink-60); line-height: 1.9; }
     .footer__biz { font-size: 11px; color: var(--ink-30); line-height: 1.9; text-align: right; }
+
+    /* INFO + FOOTER dark bg overrides */
+    .info .en-label { color: rgba(255,255,255,0.45); }
+    .info .section-heading { color: #fff; }
+    .info__tabs { border-bottom-color: rgba(255,255,255,0.15); }
+    .info__tab-btn { color: rgba(255,255,255,0.55); }
+    .info__tab-btn.active { color: #fff; border-bottom-color: #fff; }
+    .info__tab-btn:hover:not(.active) { color: #fff; }
+    .info .loc-row { border-bottom-color: rgba(255,255,255,0.12); }
+    .info .loc-row dt { color: rgba(255,255,255,0.45); }
+    .info .loc-row dd, .info .loc-row dd a { color: rgba(255,255,255,0.85); }
+    .info .map-link { color: rgba(255,255,255,0.65); }
+    .info .rules-list li { color: rgba(255,255,255,0.75); border-bottom-color: rgba(255,255,255,0.12); }
+    .info .rules-list li::before { color: rgba(255,255,255,0.4); }
+    .info .rules-list li strong { color: #fff; }
+    .info .refund-table th { color: rgba(255,255,255,0.5); border-bottom-color: rgba(255,255,255,0.3); }
+    .info .refund-table td { color: rgba(255,255,255,0.8); border-bottom-color: rgba(255,255,255,0.1); }
+    .info .refund-table td:last-child { color: rgba(255,255,255,0.9); }
+    .info .refund-none { color: #ff9999 !important; }
+    .footer__info { color: rgba(255,255,255,0.75); }
+    .footer__biz { color: rgba(255,255,255,0.6); }
+    .footer__brand img { opacity: 1; filter: brightness(0) invert(1); }
 
     /* REVEAL */
     @media (prefers-reduced-motion: no-preference) {
@@ -243,8 +269,8 @@
       .footer__biz { text-align: left; }
       .hero__scroll { display: none; }
       .info__tab-btn { padding: 12px 16px; font-size: 13px; }
-      .calendar-embed { height: 520px; }
-      .calendar-embed iframe { width: 125%; transform: scale(0.8); }
+      .calendar-embed { height: 620px; }
+      .calendar-embed iframe { width: 125%; height: 775px; transform: scale(0.8); }
     }
     @media (max-width: 480px) {
       .hero__actions { flex-direction: column; }
@@ -275,7 +301,9 @@
     <section class="hero" aria-label="메인 헤더">
       <div class="hero__bg">
         <div class="hero__bg-fallback" aria-hidden="true"></div>
-        <img src="images/hero.jpg" alt="" aria-hidden="true" loading="eager" id="heroImg">
+        <div class="hero__slides" id="heroSlides">
+          <img src="images/hero.jpg" alt="" aria-hidden="true" loading="eager" class="hero__slide active" id="heroImg">
+        </div>
         <div class="hero__overlay"></div>
       </div>
       <div class="container hero__content">
@@ -286,7 +314,7 @@
           좋은 사람들과, 아무 걱정 없는 하루.
         </p>
         <div class="hero__actions reveal reveal-delay-3">
-          <a href="#availability" class="btn-primary">예약 확인하기</a>
+          <a href="#availability" class="btn-primary">예약하기</a>
           <a href="#exterior" class="btn-ghost">공간 살펴보기</a>
         </div>
       </div>
@@ -453,7 +481,9 @@
             <span class="en-label reveal">Pricing</span>
             <h2 class="section-heading reveal reveal-delay-1" id="pricing-title">이용 요금 안내</h2>
             <p class="section-body reveal reveal-delay-2">
-              온전한 휴식을 위한 프라이빗 독채 공간입니다. 기본 6인부터 최대 10인까지 머무르실 수 있으며, 기준 인원 초과 시 1인당 2만 원이 추가됩니다. 바베큐는 편리하게 그릴과 숯 세팅을 요청하시거나, 직접 준비하고 세척해 주시는 조건으로 장비를 무료로 이용하실 수 있습니다.
+              온전한 휴식을 위한 프라이빗 독채 공간입니다.<br>
+              기본 6인부터 최대 10인까지 머무르실 수 있으며, 기준 인원 초과 시 1인당 2만 원이 추가됩니다.<br>
+              바베큐는 편리하게 그릴과 숯 세팅을 요청하시거나, 직접 준비하고 세척해 주시는 조건으로 장비를 무료로 이용하실 수 있습니다.
             </p>
           </div>
           <div class="reveal reveal-delay-1">
@@ -504,6 +534,9 @@
         </div>
         <div class="calendar-embed">
           <iframe src="https://booking.pension.onda.me/139407/calendar" title="여유로와 예약 캘린더" loading="lazy" allow="payment"></iframe>
+          <div class="calendar-overlay" role="button" tabindex="0" aria-label="예약 페이지 새 탭으로 열기"
+            onclick="window.open('https://booking.pension.onda.me/139407/calendar','_blank','noopener')"
+            onkeydown="if(event.key==='Enter'||event.key===' ')window.open('https://booking.pension.onda.me/139407/calendar','_blank','noopener')"></div>
         </div>
         <p style="text-align:center;margin-top:16px;font-size:13px;color:var(--ink-60);">
           캘린더가 보이지 않으면 <a href="https://booking.pension.onda.me/139407/calendar" target="_blank" rel="noopener" style="color:var(--forest);text-decoration:underline;">여기</a>를 눌러 새 창에서 여세요.
@@ -642,7 +675,31 @@
         el.src = pub(rows[0].storage_path);
         if (rows[0].alt) el.alt = rows[0].alt;
       };
-      replaceImg('hero',     'heroImg');
+      // Hero slideshow
+      const heroSlides = document.getElementById('heroSlides');
+      const heroRows = bySlot['hero'] || [];
+      if (heroRows.length > 0 && heroSlides) {
+        heroSlides.innerHTML = '';
+        heroRows.forEach((r, i) => {
+          const img = document.createElement('img');
+          img.src = pub(r.storage_path);
+          img.alt = '';
+          img.setAttribute('aria-hidden', 'true');
+          img.className = 'hero__slide' + (i === 0 ? ' active' : '');
+          img.setAttribute('loading', i === 0 ? 'eager' : 'lazy');
+          img.onerror = () => { img.src = 'images/hero.jpg'; };
+          heroSlides.appendChild(img);
+        });
+        if (heroRows.length > 1) {
+          let cur = 0;
+          setInterval(() => {
+            const slides = heroSlides.querySelectorAll('.hero__slide');
+            slides[cur].classList.remove('active');
+            cur = (cur + 1) % slides.length;
+            slides[cur].classList.add('active');
+          }, 5000);
+        }
+      }
       replaceImg('exterior', 'exteriorImg');
       replaceImg('living',   'livingImg');
       replaceImg('loft',     'loftImg');
