@@ -140,7 +140,7 @@
     .gallery__tab.active { background: #8FB8AD; border-color: #8FB8AD; color: #fff; }
     .gallery__tab:disabled { opacity: 0.25; cursor: default; }
     /* thumbnail grid */
-    .gallery__grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; gap: 2px; overflow: hidden; margin-top: 16px; }
+    .gallery__grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; gap: 4px; overflow: hidden; margin-top: 16px; }
     .gallery__item { overflow: hidden; border-radius: 6px; background: rgba(255,255,255,0.06); aspect-ratio: 1/1; position: relative; cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s, transform 0.15s; }
     .gallery__item.selected { border-color: #8FB8AD; }
     .gallery__item:hover { transform: scale(1.03); }
@@ -272,7 +272,7 @@
       .gallery__main { width: 100%; }
       .gallery__main-img-wrap { padding-top: 56.25%; }
       .gallery__sidebar { width: 100%; }
-      .gallery__grid { height: auto !important; grid-template-rows: auto; }
+      .gallery__grid { grid-template-rows: auto; }
     }
     @media (max-width: 768px) {
       .offers__grid { grid-template-columns: 1fr; }
@@ -801,20 +801,6 @@
         }
         renderCat(firstWithPhotos.key);
 
-        function syncGalleryHeight() {
-          const wrap = document.querySelector('.gallery__main-img-wrap');
-          if (!wrap || !tabsEl || !grid) return;
-          const imgH = wrap.getBoundingClientRect().height;
-          const tabsH = tabsEl.getBoundingClientRect().height;
-          const h = Math.round(imgH - tabsH - 16);
-          if (h > 0) grid.style.height = h + 'px';
-        }
-        requestAnimationFrame(() => requestAnimationFrame(syncGalleryHeight));
-        let _rsTimer;
-        window.addEventListener('resize', () => {
-          clearTimeout(_rsTimer);
-          _rsTimer = setTimeout(syncGalleryHeight, 100);
-        });
       }
     } catch(e) { console.warn('[yeoyu] dynamic images skipped:', e); }
   </script>
