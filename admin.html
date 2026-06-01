@@ -196,7 +196,7 @@ const BUCKET = 'yeoyu-gallery';
 
 // 카테고리 정의 (순서 = UI 노출 순서)
 const SLOTS = [
-  { key: 'hero',          label: '메인(히어로)',    hint: '홈 첫 화면 상단의 대표 사진 1장',         single: true  },
+  { key: 'hero',          label: '메인(히어로)',    hint: '홈 첫 화면 슬라이드쇼 사진. 여러 장 업로드 시 5초 간격으로 자동 전환됩니다.',  single: false },
   { key: 'exterior',      label: '전경',           hint: '외관, 마당, 바베큐 공간 등',            single: false },
   { key: 'kitchen',       label: '주방',           hint: '주방 공간',                         single: false },
   { key: 'living',        label: '거실',           hint: '거실 (about 섹션 메인 사진으로도 사용)', single: false },
@@ -366,7 +366,7 @@ function thumbEl(row, idx, total, slot) {
   const isSingle = slotDef?.single;
 
   const moveOptions = SLOTS
-    .filter(s => s.key !== slot && s.key !== 'hero')  // hero는 이동 대상에서 제외 (단일 슬롯)
+    .filter(s => s.key !== slot)
     .map(s => `<option value="${s.key}">→ ${s.label}(으)로 이동</option>`).join('');
 
   el.innerHTML = `
@@ -380,7 +380,7 @@ function thumbEl(row, idx, total, slot) {
         <button data-act="up" ${idx===0?'disabled':''}>↑</button>
         <button data-act="down" ${idx===total-1?'disabled':''}>↓</button>
       ` : ''}
-      ${slot !== 'hero' ? `<select data-act="move"><option value="">카테고리…</option>${moveOptions}</select>` : ''}
+      <select data-act="move"><option value="">카테고리…</option>${moveOptions}</select>
       <button data-act="del" class="del">삭제</button>
     </div>
   `;
