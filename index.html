@@ -89,11 +89,10 @@
     /* INTERIOR */
     .interior { padding: var(--section-gap) 0; background: var(--warm-50); }
     .interior__header { margin-bottom: 48px; }
-    .interior__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    .interior__card { border-radius: var(--radius-md); overflow: hidden; }
-    .interior__card-img { height: 500px; overflow: hidden; }
-    .interior__card-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.7s ease; }
-    .interior__card:hover .interior__card-img img { transform: scale(1.04); }
+    .interior__stack { display: flex; flex-direction: column; gap: 4px; }
+    .interior__photo { width: 100%; overflow: hidden; }
+    .interior__photo img { width: 100%; height: auto; display: block; object-fit: cover; transition: transform 0.7s ease; }
+    .interior__photo:hover img { transform: scale(1.02); }
 
     /* SPECIAL OFFERS */
     .offers { padding: var(--section-gap) 0; background: var(--cream); }
@@ -261,8 +260,7 @@
     @media (max-width: 1024px) {
       .split { grid-template-columns: 1fr; min-height: auto; }
       .split__img { height: 480px; }
-      .interior__grid { grid-template-columns: 1fr; }
-      .interior__card-img { height: 380px; }
+
       .offers__header { grid-template-columns: 1fr; }
       .offers__grid { grid-template-columns: 1fr 1fr; }
       .amenities__grid { grid-template-columns: repeat(3, 1fr); }
@@ -364,16 +362,12 @@
             따뜻한 실내 공간, 호텔식 순면 침구. 바쁜 일상에서 잠시 벗어나 여유로운 시간을 보낼 수 있도록 준비했습니다.
           </p>
         </div>
-        <div class="interior__grid">
-          <div class="interior__card reveal">
-            <div class="interior__card-img">
-              <img src="images/interior-living.jpg" alt="여유로와 거실" loading="lazy" id="livingImg">
-            </div>
+        <div class="interior__stack" id="interiorStack">
+          <div class="interior__photo reveal">
+            <img src="images/interior-living.jpg" alt="여유로와 거실" loading="lazy">
           </div>
-          <div class="interior__card reveal reveal-delay-2">
-            <div class="interior__card-img">
-              <img src="images/interior-loft.jpg" alt="여유로와 다락방" loading="lazy" id="loftImg">
-            </div>
+          <div class="interior__photo reveal reveal-delay-1">
+            <img src="images/interior-loft.jpg" alt="여유로와 다락방" loading="lazy">
           </div>
         </div>
       </div>
@@ -724,8 +718,23 @@
         }
       }
       replaceImg('exterior', 'exteriorImg');
-      replaceImg('living',   'livingImg');
-      replaceImg('loft',     'loftImg');
+
+      // 인테리어 섹션 — interior 슬롯 최대 4장, 없으면 기본 2장 유지
+      const interiorStack = document.getElementById('interiorStack');
+      const interiorRows = (bySlot['interior'] || []).slice(0, 4);
+      if (interiorStack && interiorRows.length) {
+        interiorStack.innerHTML = '';
+        interiorRows.forEach((row, i) => {
+          const div = document.createElement('div');
+          div.className = 'interior__photo reveal' + (i > 0 ? ' reveal-delay-' + Math.min(i, 3) : '');
+          const img = document.createElement('img');
+          img.src = pub(row.storage_path);
+          img.alt = row.alt || '여유로와 인테리어';
+          img.loading = 'lazy';
+          div.appendChild(img);
+          interiorStack.appendChild(div);
+        });
+      }
 
       // Special offers 이미지
       const offerSlots = ['jacuzzi', 'bbq', 'living', 'kitchen'];
