@@ -728,7 +728,7 @@
       replaceImg('loft',     'loftImg');
 
       // Special offers 이미지
-      const offerSlots = ['jacuzzi', 'exterior', 'living', 'kitchen'];
+      const offerSlots = ['jacuzzi', 'bbq', 'living', 'kitchen'];
       document.querySelectorAll('.offer-card').forEach((card, i) => {
         const rows = bySlot[offerSlots[i]];
         if (rows?.length) card.querySelector('.offer-card__img').style.backgroundImage = `url('${pub(rows[0].storage_path)}')`;
