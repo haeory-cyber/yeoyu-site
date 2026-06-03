@@ -693,30 +693,42 @@
         el.src = pub(rows[0].storage_path);
         if (rows[0].alt) el.alt = rows[0].alt;
       };
-      // Hero slideshow
+      // Hero slideshow — 로컬 hero.jpg 즉시 표시 후 Supabase 이미지로 페이드인 교체
       const heroSlides = document.getElementById('heroSlides');
       const heroRows = bySlot['hero'] || [];
       if (heroRows.length > 0 && heroSlides) {
-        heroSlides.innerHTML = '';
-        heroRows.forEach((r, i) => {
-          const img = document.createElement('img');
-          img.src = pub(r.storage_path);
-          img.alt = '';
-          img.setAttribute('aria-hidden', 'true');
-          img.className = 'hero__slide' + (i === 0 ? ' active' : '');
-          img.setAttribute('loading', i === 0 ? 'eager' : 'lazy');
-          img.onerror = () => { img.src = 'images/hero.jpg'; };
-          heroSlides.appendChild(img);
-        });
-        if (heroRows.length > 1) {
-          let cur = 0;
-          setInterval(() => {
-            const slides = heroSlides.querySelectorAll('.hero__slide');
-            slides[cur].classList.remove('active');
-            cur = (cur + 1) % slides.length;
-            slides[cur].classList.add('active');
-          }, 5000);
-        }
+        const preload = new Image();
+        preload.src = pub(heroRows[0].storage_path);
+        preload.onload = () => {
+          const fallback = heroSlides.querySelector('.hero__slide.active');
+          const newSlides = heroRows.map((r) => {
+            const img = document.createElement('img');
+            img.src = pub(r.storage_path);
+            img.alt = '';
+            img.setAttribute('aria-hidden', 'true');
+            img.className = 'hero__slide';
+            img.setAttribute('loading', 'lazy');
+            img.onerror = () => { img.src = 'images/hero.jpg'; };
+            heroSlides.appendChild(img);
+            return img;
+          });
+          requestAnimationFrame(() => {
+            if (fallback) fallback.classList.remove('active');
+            newSlides[0].classList.add('active');
+            setTimeout(() => { if (fallback) fallback.remove(); }, 1300);
+          });
+          if (heroRows.length > 1) {
+            let cur = 0;
+            setTimeout(() => {
+              setInterval(() => {
+                const slides = heroSlides.querySelectorAll('.hero__slide');
+                slides[cur].classList.remove('active');
+                cur = (cur + 1) % slides.length;
+                slides[cur].classList.add('active');
+              }, 5000);
+            }, 1300);
+          }
+        };
       }
       replaceImg('exterior', 'exteriorImg');
 
