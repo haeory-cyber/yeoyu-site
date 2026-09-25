@@ -115,7 +115,7 @@ rep('<td>바베큐 — 그릴 및 숯 세팅</td>\n                  <td>+30,000
 rep('<td>바베큐 — 셀프 이용<small>세척 조건</small></td>\n                  <td>무료</td>', '<td>BBQ — self-service<small>clean-up required</small></td>\n                  <td>Free</td>')
 rep('<td>장작</td>\n                  <td>+15,000원</td>', '<td>Firewood</td>\n                  <td>+₩15,000</td>')
 rep('<p class="price-account">입금 계좌<br>카카오뱅크 3333-07-1187888 (예금주: 김성훈(여유로와))</p>',
-    '<p class="price-account">Payment by bank transfer<br>KakaoBank 3333-07-1187888 (account holder: 김성훈(여유로와) / Kim Seong-hoon)<br>Paying from overseas? Contact us and we will arrange it together.</p>')
+    '<p class="price-account">Payment by bank transfer<br>KakaoBank 3333-07-1187888 (account holder: 김성훈(여유로와) / Kim Sung-hoon)<br>Paying from overseas? Contact us and we will arrange it together.</p>')
 
 # ---------- AVAILABILITY ----------
 rep('<h2 class="section-heading reveal reveal-delay-1" id="availability-title">실시간 <em>예약</em></h2>', '<h2 class="section-heading reveal reveal-delay-1" id="availability-title">Live <em>Availability</em></h2>')
@@ -160,7 +160,7 @@ rep('<tr><td>당일 취소</td><td class="refund-none">환불 불가</td></tr>',
 # ---------- FOOTER ----------
 rep('<img src="images/logo.png" alt="여유로와">', '<img src="/images/logo.png" alt="Yeoyurowa">')
 rep('          상호: 여유로와 &nbsp;·&nbsp; 사업자등록번호: 302-17-02708 &nbsp;·&nbsp; 대표: 김성훈<br>\n          주소: 충남 논산시 가야곡면 강청길 32 &nbsp;·&nbsp; 전화: 010-4342-9712',
-    '          Yeoyurowa (여유로와) &nbsp;·&nbsp; Business registration no. 302-17-02708 &nbsp;·&nbsp; Owner: Kim Seong-hoon<br>\n          32 Gangcheong-gil, Gayagok-myeon, Nonsan-si, Chungcheongnam-do, South Korea &nbsp;·&nbsp; Tel +82 10-4342-9712')
+    '          Yeoyurowa (여유로와) &nbsp;·&nbsp; Business registration no. 302-17-02708 &nbsp;·&nbsp; Owner: Kim Sung-hoon<br>\n          32 Gangcheong-gil, Gayagok-myeon, Nonsan-si, Chungcheongnam-do, South Korea &nbsp;·&nbsp; Tel +82 10-4342-9712')
 
 # ---------- JS ----------
 rep("img.onerror = () => { img.src = 'images/hero.jpg'; };", "img.onerror = () => { img.src = '/images/hero.jpg'; };")
