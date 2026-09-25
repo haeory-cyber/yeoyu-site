@@ -3,7 +3,7 @@
 Every replacement must match exactly the expected number of times, else abort."""
 import re, sys, pathlib
 
-ROOT = pathlib.Path('/home/haeory/poomasi/yeoyu')
+ROOT = pathlib.Path(__file__).resolve().parents[1]
 src = (ROOT / 'index.html').read_text(encoding='utf-8')
 out = src
 
