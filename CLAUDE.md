@@ -26,7 +26,13 @@
 
 ```
 yeoyu-site/
-├── index.html        ← 메인 사이트 (한 파일에 HTML+CSS+JS 모두 들어 있음)
+├── index.html        ← 메인 사이트 정본 (한 파일에 HTML+CSS+JS 모두 들어 있음)
+├── en/
+│   └── index.html    ← 영어판. 🔴 직접 수정 금지 — index.html 고친 뒤 재생성한다
+├── scripts/
+│   └── build_en.py   ← 영어판 생성기. `python3 scripts/build_en.py` 실행
+├── data/
+│   └── eats.json     ← 「주변 맛집」 원본 데이터 (식당 목록·카테고리·출처)
 ├── images/           ← 사이트에 쓰는 사진들
 │   ├── hero.jpg              (메인 화면 큰 사진)
 │   ├── interior-living.jpg   (거실)
@@ -103,6 +109,20 @@ JS 자동 계산 부분도 같이 수정해야 함:
 index.html에서 해당 문구 검색 후 직접 수정.
 한글 깨짐 방지: 파일을 UTF-8로 저장.
 ```
+🔴 index.html의 문구를 고쳤으면 반드시 영어판도 다시 만든다:
+```bash
+python3 scripts/build_en.py     # "OK <n> replacements" 가 나오면 성공
+```
+build_en.py는 index.html의 문구를 **정확한 문자열 일치**로 영어로 바꾼다.
+- 바꾼 문구가 스크립트에 등록돼 있으면 → 일치 개수가 안 맞아 `exit 1`. 스크립트의 해당 old 문자열을 새 문구로 고친다.
+- 새 문구·새 섹션을 추가했으면 → build_en.py에 `rep('한국어', 'English')` 줄을 추가한다. 안 하면 영어판에 한글이 남아 `LEFTOVER HANGUL`로 `exit 1`.
+
+### 4-2) 「주변 맛집」 목록 수정
+```
+data/eats.json 만 고치면 한국어판·영어판에 동시 반영된다 (HTML 수정 불필요).
+각 항목은 ko/en 쌍(name_ko/name_en, line_ko/line_en …)을 모두 채울 것.
+🔴 JSON에 없는 사실을 카드에 쓰지 않는다. 출처 문구(meta.source_ko/en)는 지우지 말 것.
+```
 
 ### 5) 연락처/계좌 변경
 ```
@@ -172,7 +192,8 @@ git push
 - [ ] 수정할 파일을 백업했는가 (`cp index.html index.html.bak_YYYYMMDD`)
 - [ ] 사용자에게 무엇을 어떻게 바꿀지 확인했는가
 - [ ] 사진을 바꾼다면 용량이 1MB 이하인가
-- [ ] 수정 후 로컬에서 한 번 열어봤는가 (`python3 -m http.server` 후 브라우저)
+- [ ] 문구를 고쳤다면 `python3 scripts/build_en.py`를 돌려 영어판을 다시 만들었는가
+- [ ] 수정 후 로컬에서 한 번 열어봤는가 (`python3 -m http.server` 후 브라우저) — 한국어판 `/` 와 영어판 `/en/` 둘 다
 - [ ] 깨진 곳 없이 깔끔한가 (모바일·PC 모두)
 - [ ] commit 메시지를 한국어로 명확히 적었는가
 - [ ] push 후 1~2분 뒤 https://yeoyu.poomasi.org 에서 확인했는가

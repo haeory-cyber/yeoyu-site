@@ -11,3 +11,6 @@ mindvault-out/
 # OS
 .DS_Store
 Thumbs.db
+
+# 디자인 검수 스크린샷 (로컬 전용)
+_review/
